@@ -9,5 +9,5 @@ dependencies:
     - ipywidgets
     - jupyter_contrib_nbextensions
     - natsort
-    - pdfminer3k
+    - pdfminer
     - matplotlib
