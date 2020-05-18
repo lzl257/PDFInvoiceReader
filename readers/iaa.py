@@ -1,11 +1,13 @@
 import os
 import re
 import pandas as pd
+from .reader import PDFReader
 
-class IAAInvReader():
+
+class IAAInvReader(PDFReader):
     
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, upload_widget):
+        super().__init__(upload_widget=upload_widget)
         
         
     def __reg_basic(self, str_content):
@@ -18,12 +20,16 @@ class IAAInvReader():
     
     def __reg_total(self, str_content):
         return re.findall('Total\ amount\ due\\n\\n(.*?)\\n', str_content)
+
     
     def get_info(self):
+        # First read the uploaded files.
+        super().upload()
+        
         info_list = []
-        for pdf in os.listdir(self.path):
+        for pdf in os.listdir(self.temp_dir):
             if pdf.endswith(".pdf"):
-                os.system(f"pdf2txt.py -o text_{pdf[:-4]}.txt -t text  {self.path}/{pdf}")
+                os.system(f"pdf2txt.py -o text_{pdf[:-4]}.txt -t text  {self.temp_dir}/{pdf}")
                 with open(f"text_{pdf[:-4]}.txt", 'r') as text:
                     print(f"Rechnung {pdf[:-4]} starts")
                     text_str = text.read()
