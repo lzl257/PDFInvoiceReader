@@ -1,4 +1,4 @@
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lzl257/PDFInvoiceReader/master)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lzl257/PDFInvoiceReader/master?filepath=main.ipynb)
 
 
 # PDFInvoiceReader
