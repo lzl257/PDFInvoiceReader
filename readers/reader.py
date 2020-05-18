@@ -21,3 +21,4 @@ class PDFReader():
     
     def delete(self):
         os.system(f"rm -r {self.temp_dir}")
+        os.system("rm *.txt")

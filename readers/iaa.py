@@ -3,6 +3,8 @@ import re
 import pandas as pd
 from .reader import PDFReader
 
+from IPython.display import clear_output
+
 
 class IAAInvReader(PDFReader):
     
@@ -29,10 +31,15 @@ class IAAInvReader(PDFReader):
         info_list = []
         for pdf in os.listdir(self.temp_dir):
             if pdf.endswith(".pdf"):
-                os.system(f"pdf2txt.py -o text_{pdf[:-4]}.txt -t text  {self.temp_dir}/{pdf}")
-                with open(f"text_{pdf[:-4]}.txt", 'r') as text:
-                    print(f"Rechnung {pdf[:-4]} starts")
+                os.system(f"pdf2txt.py -o {pdf[:-4]}.txt -t text  {self.temp_dir}/{pdf}")
+                with open(f"{pdf[:-4]}.txt", 'r') as text:
+                    print(f"Rechnung {pdf[:-4]}")
                     text_str = text.read()
+                    if not "International Airfreight Associates B.V." in text_str:
+                        print(f"The invoice {pdf[:-4]} does not belong to IAA!")
+                        info_list.append(pd.DataFrame(columns=["Invoice number", "Invoice date", "Invoice due date",
+                                                  "Chargeable weight", "Total amount due"]))
+                    
                     cap_basic = self.__reg_basic(text_str)
                     cap_weight = self.__reg_weight(text_str)
                     cap_total = self.__reg_total(text_str)
@@ -56,6 +63,6 @@ class IAAInvReader(PDFReader):
 
                 info_list.append(pd.DataFrame(df_dict, index=[0]))
 
-        info = pd.concat(info_list).reset_index(drop=True)
+        info = pd.concat(info_list).dropna().reset_index(drop=True)
         
         return info
