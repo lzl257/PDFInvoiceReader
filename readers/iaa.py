@@ -16,8 +16,16 @@ class IAAInvReader(PDFReader):
         return re.findall('Page:\\n\\n(.*?)\\n(.*?)\\n(.*?)\n1', str_content)
     
     
-    def __reg_standard_weight(self, str_content):
-        return re.findall('Weight\\n([0-9]+)\\n\\n(.*?)\\n\\nChargeable', str_content)
+    def __reg_standard_weight(self, str_content):        
+        pat1 = re.findall('Weight\\n([0-9]+)\\n\\n(.*?)\\n\\nChargeable', str_content)
+        pat2 = re.findall('Weight\\n([0-9]+)\\n(.*?)\\n\\nChargeable', str_content)
+        
+        if len(pat1) != 0:
+            return pat1
+        elif len(pat2) != 0:
+            return pat2
+        else:
+            return []
     
     
     def __reg_weight(self, str_content):
