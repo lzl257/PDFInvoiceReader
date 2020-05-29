@@ -41,7 +41,30 @@ class IAAInvReader(PDFReader):
     
     
     def __reg_flight_info(self, str_content):
-        return re.findall('Flight\ No\.:\\n([A-Z]{3}):\\n\\n(.*?)\\n(.*?)\\n(.*?)\\n(.*?)\\n(.*?)\\n\\nInvoice', str_content)
+        pat1 = re.findall('Flight\ No\.:\\n([A-Z]{3}):\\n\\n(.*?)\\n(.*?)\\n(.*?)\\n(.*?)\\n(.*?)\\n\\n', str_content)
+        pat2 = re.findall('Flight\ No\.:\\n([A-Z]{3}):\\n\\n(.*?)\\n(.*?)\\n(.*?)\\n(.*?)\\n(.*?)\\n(.*?)\\n\\n', str_content)
+        
+        if len(pat1) != 0:
+            return pat1
+        elif len(pat2) != 0:
+            # For pat2.
+            empty = []
+            for date in zip(pat2[0][5:]):
+                empty.append(date[0])
+
+            new_date = "\n".join(empty)
+            new_pat2 = list(pat2[0][:5])
+            new_pat2.append(new_date)
+            
+            pat2_list = []
+            pat2_list.append(tuple(new_pat2))
+            return pat2_list
+        else:
+            return []
+        
+
+        
+
 
     
     def get_info(self):
